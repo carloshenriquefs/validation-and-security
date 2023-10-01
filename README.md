@@ -1,12 +1,18 @@
-# Challenge - Validation And Security
+# :construction: - Challenge - Validation And Security
 
 * Implemente as funcionalidades necessárias para que os testes passem;
 
 ##
 
-## - Testes:
+## :clipboard: - Diagrama:
 
-- City:
+![validacao drawio](https://github.com/carloshenriquefs/validation-and-security/assets/54969405/5cb57358-d2a7-4985-a585-745c4da048f9)
+
+##
+
+## :hourglass: - Testes:
+
+#### :derelict_house: - City:
 
     - insertShouldReturn401WhenNoUserLogged()
     - insertShouldReturn403WhenClientLogged()
@@ -14,7 +20,7 @@
     - insertShouldReturn422WhenAdminLoggedAndBlankName()
     - findAllShouldReturnAllResourcesSortedByName()
  
-- Event:
+#### :microphone: - Event:
 
     - insertShouldReturn401WhenNoUserLogged()
     - insertShouldInsertResourceWhenClientLoggedAndCorrectData()
