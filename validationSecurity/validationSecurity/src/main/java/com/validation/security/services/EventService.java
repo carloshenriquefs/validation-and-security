@@ -4,6 +4,7 @@ import com.validation.security.dto.EventDTO;
 import com.validation.security.entities.Event;
 import com.validation.security.repositories.EventRepository;
 import com.validation.security.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.validation.security.constants.Constants.FAIL_IN_REFERENTIAL_INTEGRITY;
-import static com.validation.security.constants.Constants.RESOURCE_NOT_FOUND;
+import static com.validation.security.constants.Constants.*;
 
 @Service
 public class EventService {
@@ -43,6 +43,18 @@ public class EventService {
         copyDtoToEntity(eventDTO, entity);
         eventRepository.save(entity);
         return new EventDTO(entity);
+    }
+
+    @Transactional
+    public EventDTO update(Long id, EventDTO dto) {
+        try {
+            Event entity = eventRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            eventRepository.save(entity);
+            return new EventDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(IDENTIFIER_NOT_FOUND + id);
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

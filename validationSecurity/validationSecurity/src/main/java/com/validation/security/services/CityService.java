@@ -5,6 +5,7 @@ import com.validation.security.entities.City;
 import com.validation.security.repositories.CityRepository;
 import com.validation.security.services.exceptions.DatabaseException;
 import com.validation.security.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -36,11 +37,24 @@ public class CityService {
         return new CityDTO(city);
     }
 
+    @Transactional
     public CityDTO insert(CityDTO dto) {
         City entity = new City();
         copyDtoToEntity(entity, dto);
         cityRepository.save(entity);
         return new CityDTO(entity);
+    }
+
+    @Transactional
+    public CityDTO update(Long id, CityDTO dto) {
+        try {
+            City entity = cityRepository.getReferenceById(id);
+            copyDtoToEntity(entity, dto);
+            cityRepository.save(entity);
+            return new CityDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(FAIL_IN_REFERENTIAL_INTEGRITY + id);
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
