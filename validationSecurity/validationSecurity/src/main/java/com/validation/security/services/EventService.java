@@ -58,7 +58,7 @@ public class EventService {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         if (!eventRepository.existsById(id)) {
             throw new ResourceNotFoundException(RESOURCE_NOT_FOUND);
         }
