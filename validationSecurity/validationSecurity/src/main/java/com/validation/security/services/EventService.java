@@ -37,6 +37,14 @@ public class EventService {
         return new EventDTO(entity);
     }
 
+    @Transactional
+    public EventDTO insert(EventDTO eventDTO) {
+        Event entity = new Event();
+        copyDtoToEntity(eventDTO, entity);
+        eventRepository.save(entity);
+        return new EventDTO(entity);
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void deleteById(Long id) {
         if (!eventRepository.existsById(id)) {
@@ -47,5 +55,11 @@ public class EventService {
         } catch (DataIntegrityViolationException e) {
             throw new ResourceNotFoundException(FAIL_IN_REFERENTIAL_INTEGRITY);
         }
+    }
+
+    private void copyDtoToEntity(EventDTO dto, Event entity) {
+        entity.setName(dto.getName());
+        entity.setDate(dto.getDate());
+        entity.setUrl(dto.getUrl());
     }
 }

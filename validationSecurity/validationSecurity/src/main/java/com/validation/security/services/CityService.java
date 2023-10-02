@@ -36,6 +36,13 @@ public class CityService {
         return new CityDTO(city);
     }
 
+    public CityDTO insert(CityDTO dto) {
+        City entity = new City();
+        copyDtoToEntity(entity, dto);
+        cityRepository.save(entity);
+        return new CityDTO(entity);
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!cityRepository.existsById(id)) {
@@ -46,5 +53,9 @@ public class CityService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(FAIL_IN_REFERENTIAL_INTEGRITY);
         }
+    }
+
+    private void copyDtoToEntity(City entity, CityDTO dto) {
+        entity.setName(dto.getName());
     }
 }
