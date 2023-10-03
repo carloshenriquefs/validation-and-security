@@ -7,13 +7,13 @@ import com.validation.security.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.validation.security.constants.Constants.*;
 
@@ -24,10 +24,9 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Transactional(readOnly = true)
-    public List<EventDTO> findAll() {
-        List<Event> result = eventRepository.findAll();
-        List<EventDTO> dto = result.stream().map(x -> new EventDTO(x)).collect(Collectors.toList());
-        return dto;
+    public Page<EventDTO> findAllPaged(Pageable pageable) {
+        Page<Event> list = eventRepository.findAll(pageable);
+        return list.map(x -> new EventDTO(x));
     }
 
     @Transactional(readOnly = true)
@@ -74,4 +73,5 @@ public class EventService {
         entity.setDate(dto.getDate());
         entity.setUrl(dto.getUrl());
     }
+
 }
