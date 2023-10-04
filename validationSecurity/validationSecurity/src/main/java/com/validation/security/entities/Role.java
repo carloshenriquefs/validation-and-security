@@ -1,7 +1,6 @@
 package com.validation.security.entities;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity

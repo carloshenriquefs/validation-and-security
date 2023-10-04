@@ -1,9 +1,10 @@
 package com.validation.security.dto;
 
 import com.validation.security.entities.Event;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
 
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class EventDTO {
@@ -12,11 +13,11 @@ public class EventDTO {
     @NotBlank(message = "Campo requerido")
     private String name;
 
-    @PastOrPresent(message = "A data do produto não pode ser futura")
+    @FutureOrPresent(message = "A data do evento não pode ser passada")
     private LocalDate date;
     private String url;
 
-    @NotBlank(message = "Campo requerido")
+    @NotNull(message = "Campo requerido")
     private Long cityId;
 
     public EventDTO() {

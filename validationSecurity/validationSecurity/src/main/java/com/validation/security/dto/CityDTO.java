@@ -1,7 +1,8 @@
 package com.validation.security.dto;
 
 import com.validation.security.entities.City;
-import jakarta.validation.constraints.NotBlank;
+
+import javax.validation.constraints.NotBlank;
 
 public class CityDTO {
 

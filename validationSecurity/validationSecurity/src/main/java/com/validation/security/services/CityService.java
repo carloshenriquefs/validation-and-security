@@ -3,19 +3,13 @@ package com.validation.security.services;
 import com.validation.security.dto.CityDTO;
 import com.validation.security.entities.City;
 import com.validation.security.repositories.CityRepository;
-import com.validation.security.services.exceptions.DatabaseException;
-import com.validation.security.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.validation.security.constants.Constants.*;
 
 @Service
 public class CityService {
@@ -25,16 +19,8 @@ public class CityService {
 
     @Transactional(readOnly = true)
     public List<CityDTO> findAll() {
-        List<City> result = cityRepository.findAll();
-        List<CityDTO> dto = result.stream().map(x -> new CityDTO(x)).collect(Collectors.toList());
-        return dto;
-    }
-
-    @Transactional(readOnly = true)
-    public CityDTO findById(Long id) {
-        City city = cityRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException(ENTITY_NOT_FOUND));
-        return new CityDTO(city);
+        List<City> result = cityRepository.findAll(Sort.by("name"));
+        return result.stream().map(x -> new CityDTO(x)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -45,29 +31,6 @@ public class CityService {
         return new CityDTO(entity);
     }
 
-    @Transactional
-    public CityDTO update(Long id, CityDTO dto) {
-        try {
-            City entity = cityRepository.getReferenceById(id);
-            copyDtoToEntity(entity, dto);
-            cityRepository.save(entity);
-            return new CityDTO(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(FAIL_IN_REFERENTIAL_INTEGRITY + id);
-        }
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public void delete(Long id) {
-        if (!cityRepository.existsById(id)) {
-            throw new ResourceNotFoundException(RESOURCE_NOT_FOUND);
-        }
-        try {
-            cityRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException(FAIL_IN_REFERENTIAL_INTEGRITY);
-        }
-    }
 
     private void copyDtoToEntity(City entity, CityDTO dto) {
         entity.setName(dto.getName());

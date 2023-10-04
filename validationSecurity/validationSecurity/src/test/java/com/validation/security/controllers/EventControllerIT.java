@@ -38,7 +38,6 @@ public class EventControllerIT {
     private String clientPassword;
     private String adminUsername;
     private String adminPassword;
-    private String accessToken;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -47,14 +46,12 @@ public class EventControllerIT {
         clientPassword = "123456";
         adminUsername = "bob@gmail.com";
         adminPassword = "123456";
-
     }
 
     @Test
     public void insertShouldReturn401WhenNoUserLogged() throws Exception {
 
-        LocalDate nextMonth = LocalDate.now().plusMonths(1L);
-        EventDTO dto = new EventDTO(null, "Expo XP", nextMonth, "https://expoxp.com.br", 1L);
+        EventDTO dto = new EventDTO(null, "Expo XP", LocalDate.of(2021, 5, 18), "https://expoxp.com.br", 1L);
         String jsonBody = objectMapper.writeValueAsString(dto);
 
         ResultActions result =
@@ -112,7 +109,6 @@ public class EventControllerIT {
         result.andExpect(jsonPath("$.date").value(nextMonth.toString()));
         result.andExpect(jsonPath("$.url").value("https://expoxp.com.br"));
         result.andExpect(jsonPath("$.cityId").value(1L));
-
     }
 
     @Test
@@ -140,9 +136,9 @@ public class EventControllerIT {
     public void insertShouldReturn422WhenAdminLoggedAndPastDate() throws Exception {
 
         String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, adminPassword);
-        LocalDate nextMonth = LocalDate.now().plusMonths(1L);
+        LocalDate pastMonth = LocalDate.now().minusMonths(1L);
 
-        EventDTO dto = new EventDTO(null, "      ", nextMonth, "https://expoxp.com.br", null);
+        EventDTO dto = new EventDTO(null, "Expo XP", pastMonth, "https://expoxp.com.br", 1L);
         String jsonBody = objectMapper.writeValueAsString(dto);
 
         ResultActions result =
@@ -189,3 +185,4 @@ public class EventControllerIT {
         result.andExpect(jsonPath("$.content").exists());
     }
 }
+

@@ -1,13 +1,13 @@
 package com.validation.security.entities;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "tb_event")
-public class Event {
-
+public class Event implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
