@@ -10,6 +10,22 @@
 
 ##
 
+## :gear: - Endpoints:
+
+#### :house: - City:
+
+- findAll()
+- insert()
+
+##
+
+#### :microphone: - Event:
+
+- findAll()
+- insert()
+
+##
+
 ## :hourglass: - Testes:
 
 #### :derelict_house: - City:
